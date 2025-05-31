@@ -66,14 +66,14 @@
       animation: glitch 0.3s infinite;
     }
 
-    #rickroll {
-      display: none;
-    }
-
     iframe {
       width: 100%;
       height: 100%;
       border: none;
+    }
+
+    #rickroll {
+      display: none;
     }
   </style>
 </head>
@@ -87,18 +87,34 @@
     <div class="contador" id="cuenta">10</div>
 
     <div class="mensaje" id="mensaje">Procesando...</div>
-    <div class="error" id="error">⚠️ Error crítico: Código 0x9282</div>
+    <div class="error" id="error">⚠️ Error crítico: Código 0xRICKROLL</div>
 
     <audio id="alerta" src="https://www.myinstants.com/media/sounds/windows-error.mp3" preload="auto"></audio>
   </div>
 
-  <!-- Rickroll Embebido -->
+  <!-- Rickroll en video -->
+  <div id="rickroll">
+    <div id="overlay" onclick="iniciarRickroll()" style="
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      background: black;
+      color: white;
+      font-size: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      z-index: 10;
+    ">
+      🔒 Haz clic para continuar la verificación...
+    </div>
 
-  <video id="video" autoplay  playsinline loop style="width:100%; height:100%; object-fit:cover;">
-  <source src="lero.mp4" type="video/mp4">
-  Tu navegador no soporta videos HTML5.
+    <video id="video" playsinline loop style="width:100%; height:100%; object-fit:cover;">
+      <source src="lero.mp4" type="video/mp4">
+      Tu navegador no soporta videos HTML5.
     </video>
-
+  </div>
 
   <script>
     let segundos = 10;
@@ -137,18 +153,22 @@
         clearInterval(intervalo);
         pantalla.style.display = "none";
         rickroll.style.display = "block";
-
-        // Intenta fullscreen
-        const iframe = rickroll.querySelector("iframe");
-        if (iframe.requestFullscreen) {
-          iframe.requestFullscreen();
-        } else if (iframe.webkitRequestFullscreen) {
-          iframe.webkitRequestFullscreen();
-        } else if (iframe.msRequestFullscreen) {
-          iframe.msRequestFullscreen();
-        }
+        // Aquí no se reproduce aún, espera el clic del usuario
       }
     }, 1000);
+
+    function iniciarRickroll() {
+      const overlay = document.getElementById("overlay");
+      const video = document.getElementById("video");
+      overlay.style.display = "none";
+      video.muted = false;
+      video.play();
+
+      // Intentar pantalla completa
+      if (video.requestFullscreen) video.requestFullscreen();
+      else if (video.webkitRequestFullscreen) video.webkitRequestFullscreen();
+      else if (video.msRequestFullscreen) video.msRequestFullscreen();
+    }
   </script>
 
 </body>
