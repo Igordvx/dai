@@ -1,523 +1,154 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Te amo Dai</title>
-    <style>
-        :root {
-            --color-primary: #000428;
-            --color-secondary: #004e92;
-            --color-accent: #ff7e5f;
-        }
+  <meta charset="UTF-8">
+  <title>Verificación de Identidad</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      background-color: black;
+      height: 100%;
+      overflow: hidden;
+      font-family: 'Courier New', Courier, monospace;
+      color: #00ffcc;
+    }
 
-        body {
-            margin: 0;
-            padding: 0;
-            min-height: 100vh;
-            background: linear-gradient(45deg, var(--color-primary), var(--color-secondary), #1a4158);
-            font-family: 'Crimson Text', serif;
-            color: #fff;
-            overflow-x: hidden;
-            position: relative;
-            transition: background 2s ease;
-        }
+    #pantalla, #rickroll {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+    }
 
-        body.day-mode {
-            --color-primary: #83a4d4;
-            --color-secondary: #b6fbff;
-            background: linear-gradient(45deg, var(--color-primary), var(--color-secondary));
-            color: #333;
-        }
+    #pantalla {
+      background-color: #121212;
+      text-align: center;
+      padding-top: 80px;
+    }
 
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 2rem;
-            position: relative;
-            z-index: 10;
-        }
+    h1 {
+      font-size: 28px;
+      margin-bottom: 10px;
+    }
 
-        .poema {
-            font-size: 1.4rem;
-            line-height: 1.8;
-            text-align: center;
-            opacity: 0;
-            animation: aparecer 2s ease-in forwards;
-        }
+    .sub {
+      color: #888;
+      font-size: 16px;
+    }
 
-        @keyframes aparecer {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+    .contador {
+      font-size: 60px;
+      margin: 30px 0;
+      color: #ff3333;
+    }
 
-        .wave-animation {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 100px;
-            background: url('data:image/svg+xml;utf8,<svg viewBox="0 0 1440 320" xmlns="http://www.w3.org/2000/svg"><path fill="rgba(255,255,255,0.1)" d="M0,160L48,138.7C96,117,192,75,288,80C384,85,480,139,576,165.3C672,192,768,192,864,170.7C960,149,1056,107,1152,112C1248,117,1344,171,1392,197.3L1440,224L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path></svg>');
-            animation: wave 12s linear infinite;
-            z-index: 2;
-        }
+    .mensaje {
+      font-size: 20px;
+      margin-bottom: 30px;
+    }
 
-        @keyframes wave {
-            0% { transform: translateX(0); }
-            100% { transform: translateX(-100%); }
-        }
+    .error {
+      color: red;
+      font-weight: bold;
+      font-size: 18px;
+      margin-top: 20px;
+      display: none;
+    }
 
-        .stars {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 0;
-        }
+    @keyframes glitch {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; transform: scale(1.02); }
+    }
 
-        .star {
-            position: absolute;
-            background: rgba(255,255,255,0.8);
-            border-radius: 50%;
-            animation: twinkle var(--duration) ease-in-out infinite;
-        }
+    .glitch {
+      animation: glitch 0.3s infinite;
+    }
 
-        @keyframes twinkle {
-            0%, 100% { opacity: 0.3; }
-            50% { opacity: 1; }
-        }
+    #rickroll {
+      display: none;
+    }
 
-        .verso-destacado {
-            display: inline-block;
-            margin: 1.5rem 0;
-            padding: 1rem 1.5rem;
-            border-radius: 8px;
-            background: linear-gradient(45deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05));
-            backdrop-filter: blur(5px);
-            transition: all 0.4s ease;
-            cursor: pointer;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-        }
-
-        .verso-destacado:hover {
-            transform: scale(1.05);
-            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
-            background: linear-gradient(45deg, rgba(255,255,255,0.15), rgba(255,255,255,0.1));
-            text-shadow: 0 0 10px rgba(255,255,255,0.7);
-        }
-
-        .floating-leaves {
-            position: fixed;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 1;
-        }
-
-        .leaf {
-            position: absolute;
-            width: 30px;
-            height: 30px;
-            opacity: 0;
-            animation: float 15s linear infinite;
-            filter: drop-shadow(0 0 5px rgba(255,255,255,0.3));
-            font-size: 24px;
-        }
-
-        @keyframes float {
-            0% {
-                transform: translateY(100vh) rotate(0deg);
-                opacity: 0.5;
-            }
-            100% {
-                transform: translateY(-100vh) rotate(360deg);
-                opacity: 0;
-            }
-        }
-
-        .comet {
-            position: absolute;
-            width: 100px;
-            height: 2px;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.8));
-            animation: comet 15s linear infinite;
-            transform: rotate(-45deg);
-            filter: blur(1px);
-            z-index: 1;
-        }
-
-        @keyframes comet {
-            0% {
-                transform: translateX(-100vw) rotate(-45deg);
-                opacity: 0;
-            }
-            50% {
-                opacity: 1;
-            }
-            100% {
-                transform: translateX(100vw) rotate(-45deg);
-                opacity: 0;
-            }
-        }
-
-        .interactive-wave {
-            position: fixed;
-            bottom: 0;
-            width: 100%;
-            height: 150px;
-            background: rgba(255,255,255,0.05);
-            clip-path: polygon(100% 0, 100% 100%, 0 100%, 0 30%);
-            transition: all 0.3s ease;
-            z-index: 2;
-        }
-
-        .moon {
-            position: fixed;
-            top: 30px;
-            right: 30px;
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            background: radial-gradient(circle at 30% 30%, #fff 0%, #888 100%);
-            box-shadow: 0 0 50px rgba(255,255,255,0.2);
-            animation: moonGlow 4s ease-in-out infinite alternate;
-            z-index: 1;
-            cursor: pointer;
-            transition: all 1s ease;
-        }
-
-        body.day-mode .moon {
-            background: radial-gradient(circle at 30% 30%, #ffd700 0%, #ff4500 100%);
-            box-shadow: 0 0 50px rgba(255,215,0,0.4);
-        }
-
-        @keyframes moonGlow {
-            from { box-shadow: 0 0 30px rgba(255,255,255,0.2); }
-            to { box-shadow: 0 0 60px rgba(255,255,255,0.4); }
-        }
-
-        .controls {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            display: flex;
-            gap: 10px;
-            z-index: 100;
-        }
-
-        .control-btn {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: rgba(255,255,255,0.2);
-            backdrop-filter: blur(5px);
-            border: none;
-            color: white;
-            font-size: 18px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.3s ease;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
-        }
-
-        .control-btn:hover {
-            transform: scale(1.1);
-            background: rgba(255,255,255,0.3);
-        }
-
-        .rain {
-            position: fixed;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 1;
-        }
-
-        .drop {
-            position: absolute;
-            width: 1px;
-            height: 20px;
-            background: linear-gradient(to bottom, transparent 60%, rgba(255,255,255,0.7));
-            animation: fall 1s linear infinite;
-        }
-
-        @keyframes fall {
-            from { transform: translateY(-100vh); }
-            to { transform: translateY(100vh); }
-        }
-
-        .particle {
-            position: fixed;
-            width: 4px;
-            height: 4px;
-            background: rgba(255,255,255,0.7);
-            border-radius: 50%;
-            pointer-events: none;
-            z-index: 1;
-            transition: transform 0.1s ease;
-        }
-
-        @media (max-width: 768px) {
-            .container {
-                padding: 1rem;
-            }
-            .poema {
-                font-size: 1.1rem;
-            }
-            .verso-destacado {
-                padding: 0.8rem 1rem;
-                margin: 1rem 0;
-            }
-            .moon {
-                width: 40px;
-                height: 40px;
-                top: 15px;
-                right: 15px;
-            }
-        }
-    </style>
-    <link href="https://fonts.googleapis.com/css2?family=Crimson+Text:wght@400;600;700&display=swap" rel="stylesheet">
+    iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+  </style>
 </head>
 <body>
-    <div class="stars" id="stars"></div>
-    <div class="floating-leaves" id="leaves"></div>
-    <div class="rain" id="rain"></div>
-    <div class="comet" style="top: 20%; left: -10%; animation-delay: 3s"></div>
-    <div class="comet" style="top: 70%; left: -30%; animation-delay: 8s"></div>
-    <div class="interactive-wave"></div>
-    <div class="moon" id="moonToggle"></div>
 
-    <div class="controls">
-        <button class="control-btn" id="soundToggle">🔊</button>
-        <button class="control-btn" id="rainToggle">🌧️</button>
-        <button class="control-btn" id="themeToggle">🌓</button>
-    </div>
+  <!-- Pantalla Falsa -->
+  <div id="pantalla">
+    <h1>Sistema Nacional de Verificación</h1>
+    <p class="sub">Por favor, no cierre esta ventana. Validando identidad biométrica...</p>
 
-    <div class="container">
-        <div class="poema">
-            <div class="verso-destacado" style="animation-delay: 0.5s, 1.5s">
-                Te amo con la fuerza del mar que no se cansa,<br>
-                aunque mis olas no besen tu arena.
-                Sigo siendo marea, buscándote sin pausa,<br>
-                rompiendo contra la ausencia, pero entera.
-            </div>
+    <div class="contador" id="cuenta">10</div>
 
-            <div class="verso-destacado" style="animation-delay: 2.5s">
-                Desde esta orilla le hablo al viento,<br>
-                porque sé que él pasa por donde tú respiras, y entre espuma y sal, le envío mi aliento,<br>
-                como cartas líquidas que el alma suspira.
-            </div>
+    <div class="mensaje" id="mensaje">Procesando...</div>
+    <div class="error" id="error">⚠️ Error crítico: Código 0xRICKROLL</div>
 
-            <div class="verso-destacado" style="animation-delay: 4.5s">
-                Te amo también en la selva de lo incierto,<br>
-                donde cada árbol es un deseo que crece. Tu nombre es eco en mi pecho cubierto<br>
-                de raíces que el amor, sin verte, mece.
-            </div>
+    <audio id="alerta" src="https://www.myinstants.com/media/sounds/windows-error.mp3" preload="auto"></audio>
+  </div>
 
-            <div class="verso-destacado" style="animation-delay: 6.5s">
-                Y si el cielo me roba tu cercanía,<br>
-                yo me hago cometa, polvo de estrella, cruzo galaxias con la fe encendida,<br>
-                porque mi amor es luz… y la luz siempre te encuentra,<br>
-                aunque estés lejos, aunque duela.
-            </div>
-        </div>
-    </div>
-    <div class="wave-animation"></div>
+  <!-- Rickroll Embebido -->
 
-    <audio id="ambientSound" loop>
-        <source src="https://assets.mixkit.co/active_storage/sfx/1736/1736.wav" type="audio/mpeg">
-    </audio>
-    <audio id="daySound" loop>
-        <source src="https://assets.mixkit.co/active_storage/sfx/1210/1210.wav" type="audio/mpeg">
-    </audio>
-    <audio id="rainSound" loop>
-        <source src="https://assets.mixkit.co/active_storage/sfx/2393/2393.wav" type="audio/mpeg">
-    </audio>
+    <video id="video" autoplay muted playsinline loop style="width:100%; height:100%; object-fit:cover;">
+  <source src="lero.mp4" type="video/mp4">
+  Tu navegador no soporta videos HTML5.
+    </video>
 
-    <script>
-        // Elementos interactivos
-        const moonToggle = document.getElementById('moonToggle');
-        const soundToggle = document.getElementById('soundToggle');
-        const rainToggle = document.getElementById('rainToggle');
-        const themeToggle = document.getElementById('themeToggle');
-        const ambientSound = document.getElementById('ambientSound');
-        const rainSound = document.getElementById('rainSound');
-        const rainContainer = document.getElementById('rain');
-        const daySound = document.getElementById('daySound');
-        const wave = document.querySelector('.interactive-wave');
-        const body = document.body;
+  <script>
+    let segundos = 10;
+    const cuenta = document.getElementById("cuenta");
+    const mensaje = document.getElementById("mensaje");
+    const error = document.getElementById("error");
+    const alerta = document.getElementById("alerta");
+    const pantalla = document.getElementById("pantalla");
+    const rickroll = document.getElementById("rickroll");
 
-        // Estados
-        let isPlaying = false;
-        let isRaining = false;
-        let isDayMode = false;
+    const frases = [
+      "Escaneando rostro...",
+      "Verificando patrón de voz...",
+      "Comparando en base de datos mundial...",
+      "Detectando ubicación GPS...",
+      "Consultando servidores secretos...",
+      "Estableciendo conexión segura...",
+      "Autenticación en curso...",
+      "Detectando anomalías...",
+      "Inestabilidad del sistema...",
+      "¡ERROR! Redirigiendo..."
+    ];
 
-        // Crear estrellas
-        function createStars() {
-            const starsContainer = document.getElementById('stars');
-            for (let i = 0; i < 150; i++) {
-                const star = document.createElement('div');
-                star.className = 'star';
-                star.style.left = `${Math.random() * 100}%`;
-                star.style.top = `${Math.random() * 100}%`;
-                star.style.width = `${Math.random() * 3}px`;
-                star.style.height = star.style.width;
-                star.style.setProperty('--duration', `${Math.random() * 3 + 1}s`);
-                starsContainer.appendChild(star);
-            }
+    const intervalo = setInterval(() => {
+      segundos--;
+      cuenta.textContent = segundos;
+      mensaje.textContent = frases[10 - segundos] || "Procesando...";
+
+      if (segundos === 3) {
+        alerta.play();
+        error.style.display = "block";
+        cuenta.classList.add("glitch");
+      }
+
+      if (segundos <= 0) {
+        clearInterval(intervalo);
+        pantalla.style.display = "none";
+        rickroll.style.display = "block";
+
+        // Intenta fullscreen
+        const iframe = rickroll.querySelector("iframe");
+        if (iframe.requestFullscreen) {
+          iframe.requestFullscreen();
+        } else if (iframe.webkitRequestFullscreen) {
+          iframe.webkitRequestFullscreen();
+        } else if (iframe.msRequestFullscreen) {
+          iframe.msRequestFullscreen();
         }
+      }
+    }, 1000);
+  </script>
 
-        // Crear hojas flotantes
-        function createLeaves() {
-            const leavesContainer = document.getElementById('leaves');
-            const leafTypes = ['🌿', '🍃', '🌱', '🍂'];
-            
-            for(let i = 0; i < 25; i++) {
-                const leaf = document.createElement('div');
-                leaf.className = 'leaf';
-                leaf.textContent = leafTypes[Math.floor(Math.random() * leafTypes.length)];
-                leaf.style.left = `${Math.random() * 100}%`;
-                leaf.style.animationDelay = `${Math.random() * 15}s`;
-                leaf.style.fontSize = `${Math.random() * 20 + 15}px`;
-                leavesContainer.appendChild(leaf);
-            }
-        }
-
-        // Crear lluvia
-        function createRain() {
-            rainContainer.innerHTML = '';
-            if (!isRaining) return;
-            
-            for(let i = 0; i < 100; i++) {
-                const drop = document.createElement('div');
-                drop.className = 'drop';
-                drop.style.left = `${Math.random() * 100}%`;
-                drop.style.animationDuration = `${0.5 + Math.random() * 0.5}s`;
-                drop.style.animationDelay = `${Math.random() * 2}s`;
-                rainContainer.appendChild(drop);
-            }
-        }
-
-        // Partículas que siguen el cursor
-        function addParticles() {
-            const particles = new Array(30).fill().forEach((_, i) => {
-                const particle = document.createElement('div');
-                particle.className = 'particle';
-                particle.style.cssText = `
-                    position: fixed;
-                    width: ${2 + Math.random() * 3}px;
-                    height: ${2 + Math.random() * 3}px;
-                    background: rgba(255,255,255,${0.3 + Math.random() * 0.5});
-                    border-radius: 50%;
-                    pointer-events: none;
-                    transition: transform 0.${Math.floor(Math.random() * 5) + 1}s ease;
-                `;
-                document.body.appendChild(particle);
-                
-                document.addEventListener('mousemove', (e) => {
-                    const x = e.clientX;
-                    const y = e.clientY;
-                    const angle = i * (360/30);
-                    const distance = 10 + Math.random() * 15;
-                    particle.style.transform = `translate(
-                        ${x + Math.cos(angle * Math.PI/180) * distance}px, 
-                        ${y + Math.sin(angle * Math.PI/180) * distance}px
-                    )`;
-                });
-            });
-        }
-
-        // Efecto de onda interactiva
-        function setupWaveInteraction() {
-            document.addEventListener('mousemove', (e) => {
-                const x = e.clientX / window.innerWidth;
-                wave.style.clipPath = `polygon(100% 0, 100% 100%, 0 100%, 0 ${30 + x*20}%)`;
-            });
-        }
-
-        // Animación de versos al hacer clic
-        function setupVerseInteractions() {
-            document.querySelectorAll('.verso-destacado').forEach(verso => {
-                verso.addEventListener('click', () => {
-                    verso.style.animation = 'versoPulse 0.8s ease';
-                    setTimeout(() => {
-                        verso.style.animation = '';
-                    }, 800);
-                });
-            });
-        }
-
-        // Controladores de eventos
-        moonToggle.addEventListener('click', () => {
-            moonToggle.style.transform = 'scale(1.2)';
-            setTimeout(() => moonToggle.style.transform = '', 300);
-        });
-
-        soundToggle.addEventListener('click', () => {
-            isPlaying = !isPlaying;
-            isPlaying ? ambientSound.play() : ambientSound.pause();
-            soundToggle.textContent = isPlaying ? '🔇' : '🔊';
-            soundToggle.style.transform = 'scale(1.2)';
-            setTimeout(() => soundToggle.style.transform = '', 300);
-        });
-
-        rainToggle.addEventListener('click', () => {
-            isRaining = !isRaining;
-            isRaining ? rainSound.play() : rainSound.pause();
-            rainToggle.style.transform = 'scale(1.2)';
-            setTimeout(() => rainToggle.style.transform = '', 300);
-            createRain();
-        });
-
-        themeToggle.addEventListener('click', () => {
-            isDayMode = !isDayMode;
-            body.classList.toggle('day-mode', isDayMode);
-            themeToggle.style.transform = 'scale(1.2)';
-            setTimeout(() => themeToggle.style.transform = '', 300);
-
-            if (isDayMode) {
-                ambientSound.pause();
-                ambientSound.currentTime = 0;
-                daySound.play();}
-            else {
-                daySound.pause();
-                daySound.currentTime = 0;
-                ambientSound.play();}
-
-        });
-
-        // Inicialización
-        window.onload = () => {
-            createStars();
-            createLeaves();
-            addParticles();
-            setupWaveInteraction();
-            setupVerseInteractions();
-
-            // Animación escalonada de versos
-            const versos = document.querySelectorAll('.verso-destacado');
-            versos.forEach((verso, index) => {
-                setTimeout(() => {
-                    verso.style.opacity = 1;
-                    verso.style.transform = 'translateY(0)';
-                }, index * 800 + 500);
-            });
-        };
-
-        // Añadir animación de pulso para versos
-        const style = document.createElement('style');
-        style.textContent = `
-            @keyframes versoPulse {
-                0% { transform: scale(1); }
-                50% { transform: scale(1.08); }
-                100% { transform: scale(1); }
-            }
-        `;
-        document.head.appendChild(style);
-    </script>
 </body>
 </html>
