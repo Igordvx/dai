@@ -18,11 +18,11 @@
 <body>
   <div class="wrap">
     <!-- Reemplaza animation.gif y sound.mp3 por tus archivos -->
-    <img src="animation.gif" alt="Animación" /><button id="playBtn" class="btn btn-primary" hidden>🔊 Reproducir sonido</button>
+    <img src="gif.gif" alt="Animación" /><button id="playBtn" class="btn btn-primary" hidden>🔊 Reproducir sonido</button>
 <p id="hint" class="hint" hidden>Algunos navegadores móviles bloquean la reproducción automática con sonido. Toca el botón para escuchar.</p>
 
 <!-- El audio: autoplay/loop intentará sonar; si el navegador bloquea, mostramos el botón -->
-<audio id="audio" src="sound.mp3" preload="auto" autoplay loop playsinline></audio>
+<audio id="audio" src="audio.mp3" preload="auto" autoplay loop playsinline></audio>
 
   </div>  <script>
     (async () => {
