@@ -1,0 +1,57 @@
+<!doctype html>
+
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>GIF con sonido</title>
+  <style>
+    :root { color-scheme: dark light; }
+    body { margin: 0; font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji"; display: grid; place-items: center; min-height: 100svh; background: #0b0c10; color: #eaf0f1; }
+    .wrap { display: grid; gap: 16px; text-align: center; }
+    img { max-width: min(640px, 90vw); height: auto; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,.3); }
+    .btn { appearance: none; border: 0; padding: 14px 18px; border-radius: 999px; font-weight: 700; cursor: pointer; box-shadow: 0 6px 20px rgba(0,0,0,.25); }
+    .btn-primary { background: #ffffff; color: #111; }
+    .hint { opacity: .8; font-size: .95rem; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <!-- Reemplaza animation.gif y sound.mp3 por tus archivos -->
+    <img src="animation.gif" alt="Animación" /><button id="playBtn" class="btn btn-primary" hidden>🔊 Reproducir sonido</button>
+<p id="hint" class="hint" hidden>Algunos navegadores móviles bloquean la reproducción automática con sonido. Toca el botón para escuchar.</p>
+
+<!-- El audio: autoplay/loop intentará sonar; si el navegador bloquea, mostramos el botón -->
+<audio id="audio" src="sound.mp3" preload="auto" autoplay loop playsinline></audio>
+
+  </div>  <script>
+    (async () => {
+      const audio = document.getElementById('audio');
+      const playBtn = document.getElementById('playBtn');
+      const hint = document.getElementById('hint');
+
+      // Intentar reproducir automáticamente
+      try {
+        await audio.play();
+        // Si llega aquí, el navegador permitió autoplay con sonido
+        console.log('Autoplay OK');
+      } catch (err) {
+        // Autoplay bloqueado: mostrar botón para interacción del usuario
+        console.warn('Autoplay bloqueado, mostrando botón', err);
+        playBtn.hidden = false;
+        hint.hidden = false;
+
+        const enable = async () => {
+          try { await audio.play(); } catch(e) { console.error(e); }
+          playBtn.hidden = true;
+          hint.hidden = true;
+          window.removeEventListener('pointerdown', enable);
+        };
+
+        // Permite activar con el botón o cualquier toque/clic en la página
+        playBtn.addEventListener('click', enable, { once: true });
+        window.addEventListener('pointerdown', enable, { once: true });
+      }
+    })();
+  </script></body>
+</html>
