@@ -4,10 +4,24 @@
   <meta charset="utf-8">
   <title>GIF + Sonido</title>
 </head>
-<body style="margin:0;display:flex;justify-content:center;align-items:center;height:100vh;background:#000">
+<body style="margin:0;display:flex;flex-direction:column;justify-content:center;align-items:center;height:100vh;background:#000;color:#fff">
   <img src="gif.gif" alt="Animación" style="max-width:100%;height:auto">
+  <button id="playBtn" style="margin-top:20px;font-size:1.2em;padding:10px 20px;">🔊 Activar sonido</button>
 
-  <!-- Reproduce en loop e intenta autoplay con sonido -->
-  <audio src="audio.mp3" autoplay loop></audio>
+  <audio id="audio" src="audio.mp3" loop></audio>
+
+  <script>
+    const btn = document.getElementById('playBtn');
+    const audio = document.getElementById('audio');
+
+    // Intentar autoplay
+    audio.play().catch(() => {
+      // Bloqueado → esperar interacción
+      btn.addEventListener('click', () => {
+        audio.play();
+        btn.style.display = 'none';
+      });
+    });
+  </script>
 </body>
 </html>
